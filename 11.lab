@@ -1,0 +1,19 @@
+#include <stdio.h>
+#include <math.h>
+
+int main() {
+    double keys = 1, unique;
+
+    for (int i = 1; i <= 25; i++)
+        keys *= i;
+
+    unique = keys / 25;
+
+    printf("Possible keys = %.0f\n", keys);
+    printf("Approx = 2^%.0f\n", log2(keys));
+
+    printf("Unique keys = %.0f\n", unique);
+    printf("Approx = 2^%.0f\n", log2(unique));
+
+    return 0;
+}
