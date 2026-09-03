@@ -1,44 +1,46 @@
 #include <stdio.h>
-#include <string.h>
-#include <ctype.h>
+
+void generateKeys(unsigned long long key,
+                  unsigned long long k[16]) {
+    int i;
+
+    /* Simplified educational key generation */
+    for(i = 0; i < 16; i++)
+        k[i] = key ^ (0x1111111111111111ULL * (i + 1));
+}
+
+unsigned long long desDecrypt(unsigned long long block,
+                               unsigned long long key) {
+    unsigned long long k[16], temp;
+    int i;
+
+    generateKeys(key, k);
+
+    printf("DES Decryption Key Order:\n");
+
+    for(i = 15; i >= 0; i--)
+        printf("K%d = %016llX\n", i + 1, k[i]);
+
+    temp = block;
+
+    for(i = 15; i >= 0; i--)
+        temp ^= k[i];
+
+    return temp;
+}
 
 int main() {
-    char c[500], p[500];
-    char english[] = "etaoinshrdlucmfwypvbgkjqxz";
-    int f[26] = {0}, map[26];
-    int i, j, n = 0, max, pos;
+    unsigned long long block, key, result;
 
-    printf("Enter ciphertext: ");
-    fgets(c, sizeof(c), stdin);
+    printf("Enter 64-bit ciphertext (hex): ");
+    scanf("%llx", &block);
 
-    for(i=0;c[i];i++)
-        if(isalpha(c[i])) {
-            c[n++] = tolower(c[i]);
-            f[c[n-1]-'a']++;
-        }
+    printf("Enter 64-bit key (hex): ");
+    scanf("%llx", &key);
 
-    for(i=0;i<26;i++)
-        map[i] = -1;
+    result = desDecrypt(block, key);
 
-    for(i=0;i<26;i++) {
-        max = -1;
-        pos = -1;
+    printf("Decrypted block = %016llX\n", result);
 
-        for(j=0;j<26;j++)
-            if(f[j] > max && map[j] == -1) {
-                max = f[j];
-                pos = j;
-            }
-
-        if(pos != -1)
-            map[pos] = english[i];
-    }
-
-    printf("\nPossible plaintext:\n");
-
-    for(i=0;i<n;i++)
-        printf("%c", map[c[i]-'a']);
-
-    printf("\n");
     return 0;
 }
