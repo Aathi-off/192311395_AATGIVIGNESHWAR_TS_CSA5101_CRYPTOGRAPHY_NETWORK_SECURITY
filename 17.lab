@@ -1,0 +1,44 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+int main() {
+    char c[500], p[500];
+    char english[] = "etaoinshrdlucmfwypvbgkjqxz";
+    int f[26] = {0}, map[26];
+    int i, j, n = 0, max, pos;
+
+    printf("Enter ciphertext: ");
+    fgets(c, sizeof(c), stdin);
+
+    for(i=0;c[i];i++)
+        if(isalpha(c[i])) {
+            c[n++] = tolower(c[i]);
+            f[c[n-1]-'a']++;
+        }
+
+    for(i=0;i<26;i++)
+        map[i] = -1;
+
+    for(i=0;i<26;i++) {
+        max = -1;
+        pos = -1;
+
+        for(j=0;j<26;j++)
+            if(f[j] > max && map[j] == -1) {
+                max = f[j];
+                pos = j;
+            }
+
+        if(pos != -1)
+            map[pos] = english[i];
+    }
+
+    printf("\nPossible plaintext:\n");
+
+    for(i=0;i<n;i++)
+        printf("%c", map[c[i]-'a']);
+
+    printf("\n");
+    return 0;
+}
