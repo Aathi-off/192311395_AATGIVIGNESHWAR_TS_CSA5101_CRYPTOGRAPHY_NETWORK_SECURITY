@@ -1,0 +1,33 @@
+#include <stdio.h>
+
+int main() {
+    unsigned long long key;
+    unsigned long long left, right;
+    unsigned long long subkey;
+    int i;
+
+    printf("Enter 64-bit DES key in hexadecimal: ");
+    scanf("%llx", &key);
+
+    /* Simplified 56-bit key representation */
+    left  = (key >> 28) & 0x0FFFFFFF;
+    right = key & 0x0FFFFFFF;
+
+    for(i = 1; i <= 16; i++) {
+
+        /* Circular left shift */
+        left = ((left << 1) | (left >> 27)) & 0x0FFFFFFF;
+        right = ((right << 1) | (right >> 27)) & 0x0FFFFFFF;
+
+        /*
+           First 24 bits from left 28-bit subset
+           Second 24 bits from right 28-bit subset
+        */
+        subkey = ((left & 0xFFFFFF) << 24)
+                 | (right & 0xFFFFFF);
+
+        printf("K%-2d = %012llX\n", i, subkey);
+    }
+
+    return 0;
+}
